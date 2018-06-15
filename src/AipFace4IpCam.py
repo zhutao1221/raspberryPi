@@ -4,6 +4,7 @@ import urllib,time
 import numpy as np
 from aip import AipFace
 import base64
+import multiprocessing
 
 
 # reTemp = str(base64.b64encode(bs)
@@ -18,6 +19,11 @@ imageType = 'BASE64'
 groupIdList = "hz"
   
 client = AipFace(APP_ID, API_KEY, SECRET_KEY)
+
+def execClient(ijpg):
+    result = client.search(jpg2, imageType, groupIdList)
+    print(result)
+
 index = 0
 while True:
     index = index + 1
@@ -33,7 +39,7 @@ while True:
         cv2.imshow('ipcam',ipcam)        
         if cv2.waitKey(1) ==27:
             exit(0)
-        if index%25 == 0:    
-            result = client.search(jpg2, imageType, groupIdList)
-            print(result)
-
+        if index%15 == 0:
+            t = multiprocessing.Process(target=execClient,args=(jpg2,))
+            t.daemon=True#将daemon设置为True，则主线程不比等待子进程，主线程结束则所有结束
+            t.start()
