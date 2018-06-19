@@ -14,12 +14,22 @@ API_KEY = 'YupM4GGtRLUxiiqHGwkeDGZY'
 SECRET_KEY = 'IcZ8MqZkGwZTp7XY5u1ZIXpMZBniw2Nx'
 imageType = 'BASE64'
 groupIdList = "hz"
-  
+
+tStr = 'error_code'
+errorCodeKey = tStr.decode('unicode-escape')
+tStr = 'result'
+resultKey = tStr.decode('unicode-escape')
+tStr = 'user_list'
+userListKey = tStr.decode('unicode-escape')
+tStr = 'user_id'
+userIdKey = tStr.decode('unicode-escape')
+ 
 client = AipFace(APP_ID, API_KEY, SECRET_KEY)
 
 def execClient(ijpg):
     result = client.search(ijpg, imageType, groupIdList)
-    print(result)
+    if result[errorCodeKey] == 0:
+        print(result[resultKey][userListKey][0][userIdKey])
 
 index = 0
 while True:
@@ -36,7 +46,7 @@ while True:
         cv2.imshow('ipcam',ipcam)        
         if cv2.waitKey(1) ==27:
             exit(0)
-        if index%15 == 0:
+        if index%25 == 0:
             t = multiprocessing.Process(target=execClient,args=(jpg2,))
             t.daemon=True#将daemon设置为True，则主线程不比等待子进程，主线程结束则所有结束
             t.start()
