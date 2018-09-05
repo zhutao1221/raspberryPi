@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import cv2
-import urllib,time
+import MySQLdb
+import urllib
 import numpy as np
 from aip import AipFace
 import base64
 import multiprocessing
+import time
       
 stream=urllib.urlopen('http://admin:admin@192.168.0.143:8081/video')
 bytes=''
@@ -23,30 +25,73 @@ tStr = 'user_list'
 userListKey = tStr.decode('unicode-escape')
 tStr = 'user_id'
 userIdKey = tStr.decode('unicode-escape')
+tStr = 'score'
+scoreKey = tStr.decode('unicode-escape')
  
 client = AipFace(APP_ID, API_KEY, SECRET_KEY)
 
-def execClient(ijpg):
+def execClient(ijpg,itaskid):
     result = client.search(ijpg, imageType, groupIdList)
     if result[errorCodeKey] == 0:
-        print(result[resultKey][userListKey][0][userIdKey])
+        print(result[resultKey][userListKey][0])
+        checkinId = result[resultKey][userListKey][0][userIdKey].encode("utf-8")
+        score = result[resultKey][userListKey][0][scoreKey]
 
+        if score > 80.0:
+            idb = MySQLdb.connect("192.168.0.126", "root", "root", "app")
+            icursor = idb.cursor()
+            icursor.execute("select count(1) from person_checkin where taskid = " + str(itaskid) + " and personid = '" + checkinId + "'")
+            iresults = icursor.fetchone()
+            icount = int(iresults[0])
+
+            if icount == 0:
+                try:
+                    icursor.execute("insert into person_checkin (taskid,personid,isonboard) values (" + str(itaskid) + ",'" + checkinId + "',0)")
+                    idb.commit()
+                except:
+                    idb.rollback()
+            idb.close
+
+flag = False
 index = 0
 while True:
-    index = index + 1
+    index = index + 1 
+    id = 0
+    if index%100 == 0:
+        db = MySQLdb.connect("192.168.0.126", "root", "root", "app")
+        cursor = db.cursor()       
+        cursor.execute("select id from tasklist where isend = 0 and checkin_start = 1")      
+        results = cursor.fetchall()
+        if len(results) == 1:
+            row = results[0]
+            taskid = int(row[0])
+            flag = True
+            #print('checkinStart')
+        elif len(results) > 1:
+            flag = False    
+            print('tasklist数据异常')
+        else:
+            flag = False
+        db.close()
+
+    if flag == False:
+        time.sleep(0.05)
+        continue           
+
     bytes+=stream.read(1024*8)
     a = bytes.find('\xff\xd8')
     b = bytes.find('\xff\xd9')
-     
+    
     if a!=-1 and b!=-1:
         jpg = bytes[a:b+2]
-        jpg2 = base64.b64encode(jpg)        
+        jpg4AipFace = base64.b64encode(jpg)        
         bytes= bytes[b+2:]
         ipcam = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-        cv2.imshow('ipcam',ipcam)        
+        #cv2.imshow('ipcam',ipcam)        
         if cv2.waitKey(1) ==27:
             exit(0)
-        if index%25 == 0:
-            t = multiprocessing.Process(target=execClient,args=(jpg2,))
+        if index%30 == 0:
+            t = multiprocessing.Process(target=execClient,args=(jpg4AipFace,taskid))
             t.daemon=True#将daemon设置为True，则主线程不比等待子进程，主线程结束则所有结束
             t.start()
+            #cv2.imwrite('temp/imageAI/image.jpg',ipcam) #存储为图像
