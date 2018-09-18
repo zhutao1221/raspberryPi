@@ -64,7 +64,7 @@ while True:
     if index%100 == 0:
         db = MySQLdb.connect("192.168.0.126", "root", "root", "app")
         cursor = db.cursor()       
-        cursor.execute("select meeting_id from meeting_list where status = '1' or status = '2'")      
+        cursor.execute("select meeting_id from meeting_mng where status = '1' or status = '2'")      
         results = cursor.fetchall()
         if len(results) == 1:
             meeting_id = results[0][0]
