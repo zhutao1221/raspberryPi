@@ -2,3 +2,6 @@ pic/**
 person/**
 picTest/**
 **/temp/**
+**/target/**
+**/logs/**
+**/aivc-web/msc/**

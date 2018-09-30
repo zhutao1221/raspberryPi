@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>智能会议室</title>
+<link rel="stylesheet" href="./css/demo.css">
+<link rel="stylesheet" href="./css/hl.css">
+<link rel="stylesheet"
+	href="https://qidian.gtimg.com/c/=/lulu/theme/peak/css/common/ui/Button.css,/lulu/theme/peak/css/common/ui/Range.css,/lulu/theme/peak/css/common/ui/Input.css,/lulu/theme/peak/css/common/ui/Tips.css,/lulu/theme/peak/css/common/ui/Radio.css,/lulu/theme/peak/css/common/ui/Color.css">
+<style>
+.video-x {
+	position: relative;
+	width: 640px;
+	margin: auto;
+}
+
+.video-x video {
+	background-color: black;
+	outline: 1px solid #eee;
+}
+
+.canvas-barrage {
+	position: absolute;
+	width: 640px;
+	height: 360px;
+	pointer-events: none;
+	z-index: 1;
+}
+
+input[type="range"] {
+	vertical-align: middle;
+	margin-right: 50px;
+}
+
+.ui-radio+label {
+	margin-left: 5px;
+	margin-right: 20px;
+}
+
+input[type="submit"] {
+	margin-left: 10px;
+	margin-right: 50px;
+}
+
+[disabled] {
+	pointer-events: none;
+	opacity: .4;
+}
+
+.last {
+	border-top: 1px solid #eee;
+	margin-top: 1.5em;
+	padding-top: 2em;
+}
+</style>
+</head>
+
+<body>
+	<div id="main">
+		<div id="body" class="light">
+			<div id="content" class="show">
+				<h3>展示</h3>
+				<div class="demo">
+					<div class="video-x">
+						<canvas id="canvasBarrage" class="canvas-barrage"></canvas>
+						<iframe id="videoBarrage" width="640" height="384"
+							src="http://admin:admin@192.168.0.143:8081/video"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="./js/canvasBarrage.js"></script>
+	<script>
+// 弹幕数据
+var dataBarrage = [{
+	value: 'speed设为0为非滚动',
+	time: 1, // 单位秒
+	speed: 0
+}, {
+	value: 'time控制弹幕时间，单位秒',
+	color: 'blue',
+	time: 2
+}, {
+	value: '视频共21秒',
+	time: 3.2
+}, {
+	value: '视频背景为白色',
+	time: 4.5
+}, {
+	value: '视频为录制',
+	time: 5.0
+}, {
+	value: '视频内容简单',
+	time: 6.3
+}, {
+	value: '是为了让视频尺寸不至于过大',
+	time: 7.8
+}, {
+	value: '省流量',
+	time: 8.5
+}, {
+	value: '支持弹幕暂停（视频暂停）',
+	time: 9
+}, {
+	value: 'add()方法新增弹幕',
+	time: 11
+}, {
+	value: 'reset()方法重置弹幕',
+	time: 11
+}, {
+	value: '颜色，字号，透明度可全局设置',
+	time: 13
+}, {
+	value: '具体交互细节可参考页面源代码',
+	time: 14
+}, {
+	value: '内容不错哦！',
+	time: 18,
+	color: 'yellow'
+}];
+
+// 初始化弹幕方法
+var eleCanvas = document.getElementById('canvasBarrage');
+var eleVideo = document.getElementById('videoBarrage');
+
+var CanvasBarrage = function (canvas, video, options) {
+    if (!canvas || !video) {
+        return;    
+    }
+    var defaults = {
+        opacity: 100,
+        fontSize: 24,
+        speed: 2,
+        range: [0,1],
+        color: 'white',
+        data: []
+    };
+    
+    // ... 其它参见页面源代码
+}
+
+//初始化弹幕方法
+var eleCanvas = document.getElementById('canvasBarrage');
+var eleVideo = document.getElementById('videoBarrage');
+
+var demoBarrage = new CanvasBarrage(eleCanvas, eleVideo, {
+    data: dataBarrage
+});
+	</script>
+	<script
+		src="https://qidian.gtimg.com/c/=/lulu/theme/peak/js/plugin/jquery.js,/lulu/theme/peak/js/common/ui/Follow.js,/lulu/theme/peak/js/common/ui/Tips.js,/lulu/theme/peak/js/common/ui/Range.js,/lulu/theme/peak/js/common/ui/Drop.js,/lulu/theme/peak/js/common/ui/Color.js">
+	</script>
+</body>
+</html>
