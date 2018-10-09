@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)https://www.zhangxinxu.com/study/201709/canvas-barrage-video-demo.html -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>智能会议室</title>
+		<link rel="stylesheet" href="./css/demo.css">
+		<link rel="stylesheet" href="./css/hl.css">
+		<link rel="stylesheet"
+			href="https://qidian.gtimg.com/c/=/lulu/theme/peak/css/common/ui/Button.css,/lulu/theme/peak/css/common/ui/Range.css,/lulu/theme/peak/css/common/ui/Input.css,/lulu/theme/peak/css/common/ui/Tips.css,/lulu/theme/peak/css/common/ui/Radio.css,/lulu/theme/peak/css/common/ui/Color.css">
+				
+<style>
+.video-x {
+	position: relative;
+	width: 640px;
+	margin: auto;
+}
+.video-x video {
+	background-color: black;
+	outline: 1px solid #eee;
+}
+.canvas-barrage {
+	position: absolute;
+	width: 640px;
+	height: 360px;
+	pointer-events: none;
+	z-index: 1;
+}
+
+input[type="range"] {
+	vertical-align: middle;
+	margin-right: 50px;
+}
+.ui-radio + label {
+	margin-left: 5px;
+	margin-right: 20px;
+}
+input[type="submit"] {
+	margin-left: 10px;
+	margin-right: 50px;	
+}
+[disabled] {
+	pointer-events: none;
+	opacity: .4;	
+}
+.last {
+	border-top: 1px solid #eee;
+	margin-top: 1.5em;
+	padding-top: 2em;
+}
+</style>
+</head>
+<body style="zoom: 1;">
+<div id="main">
+    <div id="body" class="light">
+    	<h1 >展示</h1>
+    	<div id="content" class="show" deep="2" >
+        	 <div class="demo">
+            	<div class="video-x">
+                	<canvas id="canvasBarrage" class="canvas-barrage" width="640" height="360"></canvas>
+                	 <video id="videoBarrage" width="640" height="384" src="./video.mp4" controls=""></video>            	
+					<!-- <img id="videoBarrage" src="http://192.168.0.143:8081/video">-->
+                </div> 
+            </div>
+            <span style="display:block; text-align:center"><span>会议名称：</span><input type="text" id="meetingName"><button id="createMeetingButton" onclick="createMeeting()">创建会议</button></span>
+            <span style="display:block; text-align:center"><button id="checkInButton" onclick="checkInButtonClick()">开始签到</button><button id="meetButton" onclick="meetButtonClick()">开始会议</button></span>
+        </div>
+
+    </div>
+</div>
+<script src="https://qidian.gtimg.com/c/=/lulu/theme/peak/js/plugin/jquery.js,/lulu/theme/peak/js/common/ui/Follow.js,/lulu/theme/peak/js/common/ui/Tips.js,/lulu/theme/peak/js/common/ui/Range.js,/lulu/theme/peak/js/common/ui/Drop.js,/lulu/theme/peak/js/common/ui/Color.js"></script>
+<script src="./source/push.js"></script>
+<script src="./source/hm.js"></script>
+<script type="text/javascript" async="" src="./source/ga.js"></script>
+<script src="./source/canvasBarrage.js"></script>
+<script src="./js/jquery-3.3.1.min.js"></script>
+<script>
+
+Date.prototype.Format = function (fmt) { //author: meizz 
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+var start = false;
+var id = -1;
+var updateTime = new Date();
+var meetingId = "";
+// 弹幕数据
+var dataBarrage = [{
+	value: 'speed设为0为非滚动',
+	time: 1, // 单位秒
+	speed: 0
+}
+];
+
+// 初始化弹幕方法
+var eleCanvas = document.getElementById('canvasBarrage');
+var eleVideo = document.getElementById('videoBarrage');
+
+var demoBarrage = new CanvasBarrage(eleCanvas, eleVideo, {
+	data: dataBarrage
+});
+
+// 下面是交互处理，与弹幕方法本身无关，旨在演示如何修改全局设置，新增弹幕等
+// 1. 全局的弹幕大小，位置和透明度处理
+document.addEventListener("DOMContentLoaded", function() {
+	$('.range').on('change', function () {
+		// 改变弹幕的透明度和字号大小
+		demoBarrage[this.name] = this.value * 1;
+	});
+	
+	$('input[name="range"]').on('click', function () {
+		// 改变弹幕在视频显示的区域范围
+		demoBarrage['range'] = this.value.split(',');
+	});
+	
+	// 发送弹幕
+	var elForm = $('#barrageForm'), elInput = $('#input');
+	elForm.on('submit', function (event) {
+		event.preventDefault();	
+		// 新增弹幕
+		demoBarrage.add({
+			value: $('#input').val(),
+			color: $('#color').val(),
+			time: eleVideo.currentTime
+		});
+		
+		elInput.val('').trigger('input');
+	});
+	// 提交按钮
+	var elSubmit = elForm.find('input[type="submit"]');
+	
+	// 输入框和禁用按钮
+	elInput.on('input', function () {
+		if (this.value.trim()) {
+			elSubmit.removeAttr('disabled');
+		} else {
+			elSubmit.attr('disabled', 'disabled');
+		}
+	});
+	
+}, false);
+//循环从数据库中取数
+setInterval(function(){
+	//alert(id + " " + updateTime + " " + start);
+	if(!start){
+		return;
+	}
+	
+	demoBarrage.add({
+		value: "aaaaaa",
+		//color: $('#color').val(),
+		time: eleVideo.currentTime
+	});
+	$.ajax({
+		type:"POST",
+		url:"/getInfo",
+		data:{"id":id,"updateTime":updateTime,"meetingId":meetingId},
+		success:function(data){
+			//alert(data);
+			var messages = $.parseJSON(data);
+			for(var i=0; i<messages.length; i++){
+				demoBarrage.add({
+					value: messages[i].content,
+					//color: $('#color').val(),
+					time: eleVideo.currentTime
+				});
+				id = messages[i].id;
+			}
+		}
+		
+	});
+},2000);
+
+function updateMeetingMng(status){
+	$.ajax({
+		type:"POST",
+		url:"/updateMeetingMng",
+		data:{"meetingId":meetingId,"status":status},
+		success:function(data){
+		}
+		
+	});
+}
+
+function meetButtonClick(){
+	if(start){ //结束会议
+		updateMeetingMng("3");
+		start = false;
+		$("#meetButton").text("开始会议");
+	}else{ //开始会议
+		updateMeetingMng("2");
+		id = -1;
+		updateTime = new Date().Format("yyyy-MM-dd hh:mm:ss");
+		$("#meetButton").text("结束会议");
+		start = true;
+	}
+	
+}
+
+function checkInButtonClick(){
+	updateMeetingMng("1");
+	$("#checkInButton").text("签到中");
+}
+
+function createMeeting(){
+	$.ajax({
+		type:"POST",
+		url:"/insertMeetingMng",
+		data:{"meetingName":$("#meetingName").val()},
+		success:function(data){
+			meetingId = data;
+			alert("创建成功");
+		}
+		
+	});
+	
+}
+
+</script>
+
+</body>
+</html>
