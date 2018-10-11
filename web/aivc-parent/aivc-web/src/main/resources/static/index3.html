@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)https://www.zhangxinxu.com/study/201709/canvas-barrage-video-demo.html -->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>智能会议室</title>
+	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/zzsc-demo.css">
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="dist/css/barrager.css">
+	<link rel="stylesheet" type="text/css" href="static/pick-a-color/css/pick-a-color-1.2.3.min.css">
+	<link type="text/css" rel="stylesheet" href="static/syntaxhighlighter/styles/shCoreDefault.css"/>
+	<link rel="stylesheet" href="./css/demo.css">	
+	<link rel="stylesheet" type="text/css" href="css/style.css">			
+</head>
+<body style="zoom:1; background: #ddd; height: auto;">
+	
+	<div id="main" style="background-color: #ddd;">
+	    <div id="body" class="light">
+	    	<div class="navbar">
+	    		<span style="display: block; width: 80%; margin: 0 auto;">
+	    			<img src="img/logo.svg" style="width: 32px; height: 32px; margin-bottom: 10px;margin-right: 10px;">
+	    			<span style="font-size: 20px; letter-spacing: 5px;">智能会议室</span>
+	    		</span>
+	    	</div>
+	    	<!-- <div class="bottomMask"></div> -->
+	    	<div class="box liveBox">
+
+	    		<div style="width: 10%; background-color: #f0f3f9; position: relative; z-index: 3;"></div>
+
+	    		<!-- 记录框 -->
+	    		<div id="danmakuBox">
+	    			<div id="danmakuInnerBox">
+	    				
+	    			</div>
+	            	
+	            </div>
+
+	            <!-- 投影区 -->
+	    		<div id="content" class="show" deep="2" >
+	    			<div class="meetingSet box">
+	    				<span style="display:block;letter-spacing: 5px;" id="meetingSetName">会议名称：</span>
+	    				<span style="display:block; margin-left:20px; text-align:center; width: 50%;">
+	    					<button id="checkInButton" onclick="checkInButtonClick()">开始签到</button>
+	    					<span>&nbsp;&nbsp;</span>
+	    					<button id="meetButton" onclick="meetButtonClick()">开始会议</button>
+	    				</span>
+	    			</div>
+		        	<div  class="demo" >
+		            	<div id="video">
+					        <img  id="video1" src="http://192.168.0.143:8081/video"/>
+					        <!-- <img  id="video1" src=""/> -->
+					    </div>
+		            </div>
+	        	</div>
+
+	        	<div style="width: 10%; background-color: #f0f3f9; position: relative; z-index: 3;"></div>
+	    	</div>
+	    	
+
+	    </div>
+	</div>
+
+
+	<!-- 蒙版 -->
+	<div class="mask"  ></div>
+	<!-- 弹出框:创建会议 -->
+	<div class="popBox createPop">
+		<div style="position: absolute; left: 50%; top:50%; transform: translate(-50%,-50%); width: 80%; text-align:center; ">
+			<div style="color: #000; margin-bottom: 9%; font-size: 2.5vw; letter-spacing: 5px; font-weight: bold;">智能会议室</div>
+			<span style="color: #000;font-size: 2vw; letter-spacing: 10px; font-weight: bold;" id="meeting">会议名称：</span>
+			<input type="text" id="meetingName" style="padding-top: 5px; padding-left: 5px; padding-right: 5px; border: none; border-bottom: 2px solid #000; width="30%;"">
+			<button id="createMeetingButton" style="background-image: url(img/createMeetingBtn.svg); height: 3vw; width: 5vw;background-color: transparent; border: none;padding: 10px; margin-left: 10px; background-size: 100% 100%;" title="创建会议"></button>
+		</div>
+	</div>
+
+	<!-- 弹出框：提示信息 -->
+	<div class="popBox createSuccessPop" style="display: none;">
+		<span style="color: #000;font-size: 2vw; letter-spacing: 10px; font-weight: bold; margin: 50px;">创建成功!</span>
+	</div>
+
+
+<script type="text/javascript" src="static/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="static/js/tinycolor-0.9.15.min.js"></script>  
+<script type="text/javascript" src="dist/js/jquery.barrager.js"></script>
+<script type="text/javascript" src="static/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="static/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="static/syntaxhighlighter/scripts/shBrushPhp.js"></script>
+<script type="text/javascript" src="static/pick-a-color/js/pick-a-color-1.2.3.min.js"></script>  
+<script>
+	//滚动条在底部
+	var div = document.getElementById('danmakuInnerBox');
+    div.scrollTop = div.scrollHeight;
+
+    function setLiveBoxHeight() {
+    	var video1_height = $("#video1").height();
+	    console.log(video1_height);
+	    $("#content").css("height", video1_height + 100); 
+	    $("#danmakuBox").css("height", video1_height + 100);  
+    }
+    //初始化height
+    $('#video1').load(function(){
+		setLiveBoxHeight();
+	});
+	//窗口大小改变时，重新初始化height
+	$(window).resize(function() {
+		setLiveBoxHeight();
+	});
+   
+
+// // test
+
+// 	var item = {
+// 	        img: '', //图片 
+// 	        info: '',
+// 	        // info: '由于记叙文、论说文、说明文、杂文等文学体裁和报道、广告、总结等应用文体裁都属于广义散文里面的范畴', //文字 
+// 	        // info: '由于记叙文、论说文、说明文、杂文等文学体裁和报道、广告、', //文字 
+// 	        // info: '由于记叙文、论说文', //文字 
+// 	        href: '#', //链接 
+// 	        close: true, //显示关闭按钮 
+// 	        speed: 6, //延迟,单位秒,默认6 
+// 	        bottom: 0, //距离底部高度,单位px,默认随机 
+// 	        color: '#fff', //颜色,默认白色 
+// 	        old_ie_color: '#000000', //ie低版兼容色,不能与网页背景相同,默认黑色 
+// 	    }
+// 	$('.demo').barrager(item);
+
+
+String.prototype.format = function(args) {
+	var result = this;
+	if (arguments.length < 1) {
+		return result;
+	}
+	var data = arguments;        
+	if (arguments.length == 1 && typeof (args) == "object") {
+		data = args;
+	}
+	for (var key in data) {
+		var value = data[key];
+		if (undefined != value) {
+			result = result.replace("{" + key + "}", value);
+		}
+	}
+	return result;
+}
+var  barrager_code=
+	'var item={\n'+
+	"   img:'{img}', //图片 \n"+
+	"   info:'{info}', //文字 \n"+
+	"   href:'{href}', //链接 \n"+
+	"   close:{close}, //显示关闭按钮 \n"+
+	"   speed:{speed}, //延迟,单位秒,默认6 \n"+
+	"   bottom:{bottom}, //距离底部高度,单位px,默认随机 \n"+
+	"   color:'{color}', //颜色,默认白色 \n"+
+	"   old_ie_color:'{old_ie_color}', //ie低版兼容色,不能与网页背景相同,默认黑色 \n"+
+	" }\n"+
+	"$('body').barrager(item);"
+	;
+
+	
+	
+Date.prototype.Format = function (fmt) { //author: meizz 
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+var start = false;
+var id = -1;
+var updateTime = new Date();
+var meetingId = "";
+
+
+//循环从数据库中取数
+setInterval(function(){
+	//alert(id + " " + updateTime + " " + start);
+	if(!start){
+		return;
+	}
+	
+	//var example_item={'img':'','info':'Hello world!'};
+	//$('#video').barrager(example_item);
+	
+	$.ajax({
+		type:"POST",
+		url:"/getInfo",
+		data:{"id":id,"updateTime":updateTime,"meetingId":meetingId},
+		success:function(data){
+			//alert(data);
+			var messages = $.parseJSON(data);
+			for(var i=0; i<messages.length; i++){
+				
+				var example_item={'img':'','info':messages[i].content};
+				$('#video').barrager(example_item);
+				//demoBarrage.add({
+				//	value: messages[i].content,
+					//color: $('#color').val(),
+				//	time: eleVideo.currentTime
+				//});
+				id = messages[i].id;
+			}
+		}
+		
+	});
+},2000);
+
+function updateMeetingMng(status){
+	$.ajax({
+		type:"POST",
+		url:"/updateMeetingMng",
+		data:{"meetingId":meetingId,"status":status},
+		success:function(data){
+		}
+		
+	});
+}
+
+function meetButtonClick(){
+	if(start){ //结束会议
+		updateMeetingMng("3");
+		start = false;
+		$("#meetButton").text("开始会议");
+		$("#meetButton").css("background-image", "url(img/startBtn.svg)");
+	}else{ //开始会议
+		updateMeetingMng("2");
+		id = -1;
+		updateTime = new Date().Format("yyyy-MM-dd hh:mm:ss");
+		$("#meetButton").text("结束会议");
+		$("#meetButton").css("background-image", "url(img/stopBtn.svg)");
+		
+	}
+	
+}
+
+function checkInButtonClick(){
+	updateMeetingMng("1");
+	start = true;
+	$("#checkInButton").text("签到中");
+}
+
+$("#createMeetingButton").one("click",function createMeeting(){
+    $.ajax({
+		type:"POST",
+		url:"/insertMeetingMng",
+		data:{"meetingName":$("#meetingName").val()},
+		success:function(data){
+			meetingId = data;
+			// alert("创建成功");
+			closePop();
+			var n = $("#meetingName").val();
+			var name = '<span style="display:block;">' + n + '</span>'
+			$('#meetingSetName').after(name);
+		}
+		
+	});
+});
+
+
+// 关闭弹窗,蒙版
+function closePop() {
+	$('.createPop').hide();
+	setTimeout(function() {
+		$('.createSuccessPop').fadeIn();
+	},100);
+	setTimeout(function() {
+		$('.createSuccessPop').fadeOut();
+	},1000);
+	setTimeout(function() {
+		$('.mask').hide();
+	},1100);
+	
+}
+
+</script>
+
+</body>
+</html>

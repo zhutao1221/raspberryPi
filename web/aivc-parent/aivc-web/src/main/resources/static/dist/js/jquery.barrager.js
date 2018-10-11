@@ -14,14 +14,17 @@
 			color: '#fff',
 			old_ie_color : '#000000'
 		}, barrage || {});
-
 		var time = new Date().getTime();
 		var barrager_id = 'barrage_' + time;
 		var id = '#' + barrager_id;
 		var div_barrager = $("<div class='barrage' id='" + barrager_id + "'></div>").appendTo($(this));
-		var window_height = $(window).height() - 300;
+		
+		var window_height = $(window).height() - 400;
+		var window_width = $(window).width() * 0.7;
+
 		var bottom = (barrage.bottom == 0) ? Math.floor(Math.random() * window_height + 200) : barrage.bottom;
 		div_barrager.css("bottom", bottom + "px");
+	
 		div_barrager_box = $("<div class='barrage_box cl'></div>").appendTo(div_barrager);
 		if(barrage.img){
 
@@ -51,35 +54,68 @@
 			content.css('color', barrage.color);
 
 		}
-		
-		var i = 0;
-		div_barrager.css('margin-right', i);
-		var looper = setInterval(barrager, barrage.speed);
 
-		function barrager() {
+		// 获取弹幕宽度,设置width，right
+		var div_barrager_width = div_barrager.css("width");
+		var j = -parseInt(div_barrager_width) + parseInt($(window).width() * 0.08);
+		div_barrager.css("width", div_barrager_width);
+		div_barrager.css("right", j);
 
+		var distance = $(window).width() * 0.7 + -j;
 
-			var window_width = $(window).width() + 500;
-			if (i < window_width) {
-				i += 1;
+		//显示记录
+		setTimeout(function() {
+				chatMessage(barrage.info);
+		},6000);
+		// 记录框
+		function chatMessage(message) {
+			
+			var randomAvatar = parseInt(Math.random() * 3) + 1;
 
-				$(id).css('margin-right', i);
-			} else {
+			var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;" + message + "</p></li>";
+			// var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;</p></li>";
 
-				$(id).remove();
- 				return false;
-			}
-
+		    $(".ulDanmaku").append(liDom);
+		    
+		    var i = 0;
+		    
+		    // var show = function() {
+		    // 	var str = '';
+		    // 	str = message.substr(0, i);
+		    // 	$("#liDomTxt").html(str);
+		    // 	i++;
+		    // 	if (i > message.length) {
+		    // 		i = 0;
+		    // 	}
+		    // 	setTimeout("show()", 200);
+		    // }
+		    // show();
+		    //滚动条始终在底部
+		    var div = document.getElementById('danmakuInnerBox');
+		    div.scrollTop = div.scrollHeight;
 		}
 
+		
+		var i = 0;
+		div_barrager.css('margin-right', 0);
+		
+ 		$(id).animate({right:window_width},barrage.speed*1000,"linear",function(){
+
+			$(id).remove();
+		});
 
 		div_barrager_box.mouseover(function() {
-			clearInterval(looper);
+		     $(id).stop(true);
 		});
 
 		div_barrager_box.mouseout(function() {
-			looper = setInterval(barrager, barrage.speed);
-		});
+
+			$(id).animate({right:window_width},barrage.speed*1000,function(){
+
+				$(id).remove();
+			});
+
+ 		});
 
 		$(id+'.barrage .barrage_box .close').click(function(){
 
@@ -87,8 +123,10 @@
 
 		})
 
+		
 	}
- 
+	
+
 	$.fn.barrager.removeAll=function(){
 
 		 $('.barrage').remove();
