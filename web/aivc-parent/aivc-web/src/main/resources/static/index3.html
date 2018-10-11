@@ -227,7 +227,7 @@ function updateMeetingMng(status){
 }
 
 function meetButtonClick(){
-	if(start){ //结束会议
+	if(!start){ //结束会议
 		updateMeetingMng("3");
 		start = false;
 		$("#meetButton").text("开始会议");
