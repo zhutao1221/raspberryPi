@@ -177,6 +177,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 var start = false;
+var closeFlag = false;
 var id = -1;
 var updateTime = new Date();
 var meetingId = "";
@@ -227,14 +228,17 @@ function updateMeetingMng(status){
 }
 
 function meetButtonClick(){
-	if(!start){ //结束会议
+	if(closeFlag){ //结束会议
 		updateMeetingMng("3");
 		start = false;
+		closeFlag = false;
 		$("#meetButton").text("开始会议");
 		$("#meetButton").css("background-image", "url(img/startBtn.svg)");
 	}else{ //开始会议
 		updateMeetingMng("2");
 		id = -1;
+		start = true;
+		closeFlag = true;
 		updateTime = new Date().Format("yyyy-MM-dd hh:mm:ss");
 		$("#meetButton").text("结束会议");
 		$("#meetButton").css("background-image", "url(img/stopBtn.svg)");
