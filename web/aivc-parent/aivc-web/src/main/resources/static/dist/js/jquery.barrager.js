@@ -74,7 +74,7 @@
 
 			var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;" + message + "</p></li>";
 			// var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;</p></li>";
-
+			console.log("111");
 		    $(".ulDanmaku").append(liDom);
 		    
 		    var i = 0;

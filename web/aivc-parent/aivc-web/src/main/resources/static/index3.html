@@ -31,7 +31,7 @@
 	    		<!-- 记录框 -->
 	    		<div id="danmakuBox">
 	    			<div id="danmakuInnerBox">
-	    				
+	    				<ul class="ulDanmaku"></ul>
 	    			</div>
 	            	
 	            </div>
@@ -235,6 +235,7 @@ function meetButtonClick(){
 		id = -1;
 		$("#meetButton").text("开始会议");
 		$("#meetButton").css("background-image", "url(img/startBtn.svg)");
+		$("#checkInButton").text("签到结束");
 	}else{ //开始会议
 		updateMeetingMng("2");		
 		start = true;
