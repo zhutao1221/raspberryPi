@@ -232,11 +232,11 @@ function meetButtonClick(){
 		updateMeetingMng("3");
 		start = false;
 		closeFlag = false;
+		id = -1;
 		$("#meetButton").text("开始会议");
 		$("#meetButton").css("background-image", "url(img/startBtn.svg)");
 	}else{ //开始会议
-		updateMeetingMng("2");
-		id = -1;
+		updateMeetingMng("2");		
 		start = true;
 		closeFlag = true;
 		updateTime = new Date().Format("yyyy-MM-dd hh:mm:ss");
