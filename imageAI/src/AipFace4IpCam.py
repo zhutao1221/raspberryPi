@@ -7,8 +7,11 @@ from aip import AipFace
 import base64
 import multiprocessing
 import time,datetime
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
       
-stream=urllib.urlopen('http://admin:admin@192.168.0.143:8081/video')
+stream=urllib.urlopen('http://admin:admin@192.168.0.163:8081/video')
 bytes=''
 
 APP_ID = 'MyFaceApp'
@@ -38,7 +41,7 @@ def execClient(ijpg,imeeting_id):
         score = result[resultKey][userListKey][0][scoreKey]
 
         if score > 80.0:
-            idb = MySQLdb.connect("192.168.0.126", "root", "root", "app")
+            idb = MySQLdb.connect("192.168.0.126", "root", "root", "app",charset='utf8')
             icursor = idb.cursor()
             icursor.execute("select count(1) from person_checkin where meeting_id = '" + imeeting_id + "' and person_id = '" + checkinId + "'")
             iresults = icursor.fetchone()
@@ -46,11 +49,17 @@ def execClient(ijpg,imeeting_id):
 
             if icount == 0:
                 try:
-                    strDate = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+                    #strDate = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
                     #icursor.execute("insert into person_checkin (id,meeting_id,person_id,status,checkin_time) " \
                     #+ "values ('" + strDate + "','" + imeeting_id + "','" + checkinId + "','0',now())")
                     icursor.execute("insert into person_checkin (meeting_id,person_id,status,checkin_time) " \
-                    + "values ('" + imeeting_id + "','" + checkinId + "','0',now())")                    
+                    + "values ('" + imeeting_id + "','" + checkinId + "','0',now())")
+                    #idb.commit()
+                    icursor = idb.cursor()
+                    icursor.execute("select name from person where id = '" + checkinId + "'")
+                    iresults = icursor.fetchone()
+                    icursor.execute("insert into meeting_content (meeting_id,content,status,submit_time,update_time) " \
+                    + "values ('" + imeeting_id + "','" + str(iresults[0]).decode('utf-8') + "加入会议','0',now(),now())")                       
                     idb.commit()
                 except:
                     idb.rollback()
@@ -61,7 +70,7 @@ index = 0
 while True:
     index = index + 1 
     id = 0
-    if index%100 == 0:
+    if index%200 == 0:
         db = MySQLdb.connect("192.168.0.126", "root", "root", "app")
         cursor = db.cursor()       
         cursor.execute("select meeting_id from meeting_mng where status = '1' or status = '2'")      
@@ -93,8 +102,10 @@ while True:
         #cv2.imshow('ipcam',ipcam)        
         if cv2.waitKey(1) ==27:
             exit(0)
-        if index%30 == 0:
+        if index%25 == 0:
             t = multiprocessing.Process(target=execClient,args=(jpg4AipFace,meeting_id))
             t.daemon=True#将daemon设置为True，则主线程不比等待子进程，主线程结束则所有结束
             t.start()
             #cv2.imwrite('temp/imageAI/image.jpg',ipcam) #存储为图像
+    if index > 999999:
+        index = 1
