@@ -55,7 +55,7 @@
 	    			</div>
 		        	<div  class="demo" >
 		            	<div id="video">
-					        <img  id="video1" src="http://192.168.0.163:8081/video"/>
+					        <img  id="video1" src="http://192.168.0.143:8081/video"/>
 					        <!-- <img  id="video1" src=""/> -->
 					    </div>
 		            </div>
@@ -258,6 +258,9 @@ function meetButtonClick(){
 		setTimeout(function() {
 			$('#msgPop').fadeIn();
 			$('.mask').show();
+			$('.mask').click(function(){
+				window.location.reload();
+			})
 		},5000);
 	}else{ //开始会议
 		updateMeetingMng("2");		
