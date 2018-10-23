@@ -20,7 +20,7 @@
 	    	<div class="navbar">
 	    		<span style="display: block; width: 80%; margin: 0 auto;">
 	    			<img src="img/logo.svg" style="width: 32px; height: 32px; margin-bottom: 10px;margin-right: 10px;">
-	    			<span style="font-size: 20px; letter-spacing: 5px;">智能会议室</span>
+	    			<span style="font-size: 1.2vw; letter-spacing: 5px;">智能会议室</span>
 	    		</span>
 	    	</div>
 	    	<!-- <div class="bottomMask"></div> -->
@@ -31,7 +31,12 @@
 	    		<!-- 记录框 -->
 	    		<div id="danmakuBox">
 	    			<div id="danmakuInnerBox">
-	    				<ul class="ulDanmaku"></ul>
+	    				<ul class="ulDanmaku">
+	    				</ul>
+	    				<div id="movingArea" style="display: none;">
+	    					<img class="danmakuImg add_transform" id="mailImg" src="img/mail.svg">
+	    				</div>
+	    				
 	    			</div>
 	            	
 	            </div>
@@ -40,15 +45,17 @@
 	    		<div id="content" class="show" deep="2" >
 	    			<div class="meetingSet box">
 	    				<span style="display:block;letter-spacing: 5px;" id="meetingSetName">会议名称：</span>
-	    				<span style="display:block; margin-left:20px; text-align:center; width: 50%;">
+	    				<span class="buttonLine">
 	    					<button id="checkInButton" onclick="checkInButtonClick()">开始签到</button>
 	    					<span>&nbsp;&nbsp;</span>
 	    					<button id="meetButton" onclick="meetButtonClick()">开始会议</button>
 	    				</span>
+	    				<span class="timeLine"><img src="img/clock.svg"><span id="timeLine"></span></span>
+	    				
 	    			</div>
 		        	<div  class="demo" >
 		            	<div id="video">
-					        <img  id="video1" src="http://192.168.0.143:8081/video"/>
+					        <img  id="video1" src="http://192.168.0.163:8081/video"/>
 					        <!-- <img  id="video1" src=""/> -->
 					    </div>
 		            </div>
@@ -63,9 +70,9 @@
 
 
 	<!-- 蒙版 -->
-	<div class="mask"  ></div>
+	<div class="mask"  "></div>
 	<!-- 弹出框:创建会议 -->
-	<div class="popBox createPop">
+	<div class="popBox createPop" >
 		<div style="position: absolute; left: 50%; top:50%; transform: translate(-50%,-50%); width: 80%; text-align:center; ">
 			<div style="color: #000; margin-bottom: 9%; font-size: 2.5vw; letter-spacing: 5px; font-weight: bold;">智能会议室</div>
 			<span style="color: #000;font-size: 2vw; letter-spacing: 10px; font-weight: bold;" id="meeting">会议名称：</span>
@@ -75,12 +82,13 @@
 	</div>
 
 	<!-- 弹出框：提示信息 -->
-	<div class="popBox createSuccessPop" style="display: none;">
-		<span style="color: #000;font-size: 2vw; letter-spacing: 10px; font-weight: bold; margin: 50px;">创建成功!</span>
+	<div class="popBox" id="msgPop" style="display: none;">
+		<span id="msgPopSpan"></span>
 	</div>
 
 
 <script type="text/javascript" src="static/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="static/js/jquery-animate-css-rotate-scale.js"></script>
 <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="static/js/tinycolor-0.9.15.min.js"></script>  
 <script type="text/javascript" src="dist/js/jquery.barrager.js"></script>
@@ -95,9 +103,9 @@
 
     function setLiveBoxHeight() {
     	var video1_height = $("#video1").height();
-	    console.log(video1_height);
-	    $("#content").css("height", video1_height + 100); 
-	    $("#danmakuBox").css("height", video1_height + 100);  
+	    // console.log(video1_height);
+	    $("#content").css("height", video1_height + 150); 
+	    $("#danmakuBox").css("height", video1_height + 150);  
     }
     //初始化height
     $('#video1').load(function(){
@@ -111,20 +119,20 @@
 
 // // test
 
-// 	var item = {
-// 	        img: '', //图片 
-// 	        info: '',
-// 	        // info: '由于记叙文、论说文、说明文、杂文等文学体裁和报道、广告、总结等应用文体裁都属于广义散文里面的范畴', //文字 
-// 	        // info: '由于记叙文、论说文、说明文、杂文等文学体裁和报道、广告、', //文字 
-// 	        // info: '由于记叙文、论说文', //文字 
-// 	        href: '#', //链接 
-// 	        close: true, //显示关闭按钮 
-// 	        speed: 6, //延迟,单位秒,默认6 
-// 	        bottom: 0, //距离底部高度,单位px,默认随机 
-// 	        color: '#fff', //颜色,默认白色 
-// 	        old_ie_color: '#000000', //ie低版兼容色,不能与网页背景相同,默认黑色 
-// 	    }
-// 	$('.demo').barrager(item);
+	// var item = {
+	//         img: '', //图片 
+	//         // info: '',
+	//         info: '由于记叙文、论说文、说明文、杂文等文学体裁和报道、广告、总结等应用文体裁都属于广义散文里面的范畴', //文字 
+	//         // info: '由于记叙文、论说文、说明文、杂文等文学体裁和报道、广告、', //文字 
+	//         // info: '由于记叙文、论说文', //文字 
+	//         href: '#', //链接 
+	//         close: true, //显示关闭按钮 
+	//         speed: 8, //延迟,单位秒,默认6 
+	//         bottom: 0, //距离底部高度,单位px,默认随机 
+	//         color: '#fff', //颜色,默认白色 
+	//         old_ie_color: '#000000', //ie低版兼容色,不能与网页背景相同,默认黑色 
+	//     }
+	// $('.demo').barrager(item);
 
 
 String.prototype.format = function(args) {
@@ -182,7 +190,7 @@ var id = -1;
 var updateTime = new Date();
 var meetingId = "";
 
-
+var damakuSum = 0;
 //循环从数据库中取数
 setInterval(function(){
 	//alert(id + " " + updateTime + " " + start);
@@ -190,8 +198,8 @@ setInterval(function(){
 		return;
 	}
 	
-	//var example_item={'img':'','info':'Hello world!'};
-	//$('#video').barrager(example_item);
+	// var example_item={'img':'','info':'Hello world!'};
+	// $('#video').barrager(example_item);
 	
 	$.ajax({
 		type:"POST",
@@ -200,6 +208,7 @@ setInterval(function(){
 		success:function(data){
 			//alert(data);
 			var messages = $.parseJSON(data);
+
 			for(var i=0; i<messages.length; i++){
 				
 				var example_item={'img':'','info':messages[i].content};
@@ -210,6 +219,14 @@ setInterval(function(){
 				//	time: eleVideo.currentTime
 				//});
 				id = messages[i].id;
+				++damakuSum;
+				if (damakuSum == 1 || damakuSum % 10 == 0) {
+					setTimeout(function() {
+						showTimeLine();
+					},7900);
+					// setTimeout(showTimeLine(),8000);
+				}
+				// setTimeout(showTimeLine(),60000);
 			}
 		}
 		
@@ -236,16 +253,21 @@ function meetButtonClick(){
 		$("#meetButton").text("开始会议");
 		$("#meetButton").css("background-image", "url(img/startBtn.svg)");
 		$("#checkInButton").text("签到结束");
+		closeAnimate();
+		$('#msgPopSpan').html("会议结束！<br>会议纪要已发送至各位Notes邮箱<br>会议时长：" + meetingTime(time));
+		setTimeout(function() {
+			$('#msgPop').fadeIn();
+			$('.mask').show();
+		},5000);
 	}else{ //开始会议
 		updateMeetingMng("2");		
 		start = true;
 		closeFlag = true;
 		updateTime = new Date().Format("yyyy-MM-dd hh:mm:ss");
-		$("#meetButton").text("结束会议");
+		$("#meetButton").text("会议进行中...");
 		$("#meetButton").css("background-image", "url(img/stopBtn.svg)");
-		
 	}
-	
+	time = updateTime.toString();
 }
 
 function checkInButtonClick(){
@@ -262,6 +284,7 @@ $("#createMeetingButton").one("click",function createMeeting(){
 		success:function(data){
 			meetingId = data;
 			// alert("创建成功");
+			$('#msgPopSpan').html("创建成功！");
 			closePop();
 			var n = $("#meetingName").val();
 			var name = '<span style="display:block;">' + n + '</span>'
@@ -274,16 +297,113 @@ $("#createMeetingButton").one("click",function createMeeting(){
 
 // 关闭弹窗,蒙版
 function closePop() {
-	$('.createPop').hide();
+	$('.createPop').hide()
 	setTimeout(function() {
-		$('.createSuccessPop').fadeIn();
+		$('#msgPop').fadeIn();
 	},100);
 	setTimeout(function() {
-		$('.createSuccessPop').fadeOut();
+		$('#msgPop').fadeOut();
 	},1000);
 	setTimeout(function() {
 		$('.mask').hide();
 	},1100);
+	
+}
+
+// 显示时间
+function run(){
+	document.getElementById("timeLine").innerHTML = new Date().Format("yyyy-MM-dd hh:mm:ss");
+	setTimeout('run()',1000);
+}
+run();
+
+// 记录框每一分钟显示一条时间
+function showTimeLine() {
+	var tLi = "<li class=\"danmakuTime\"><span>——&nbsp;&nbsp;</span><span id=\"timeSpan\">" + new Date().Format("hh:mm") + "</span><span>&nbsp;&nbsp;——</span></li>";
+	$(".ulDanmaku").append(tLi);
+	var div = document.getElementById('danmakuInnerBox');
+    div.scrollTop = div.scrollHeight;
+}
+
+// 计算会议时长
+function meetingTime(t) {
+	var dateBegin = new Date(t.replace(/-/g, "/"));//将-转化为/，使用new Date
+    var dateEnd = new Date();//获取当前时间
+    var dateDiff = dateEnd.getTime() - dateBegin.getTime();//时间差的毫秒数
+    var dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000));//计算出相差天数
+    var leave1=dateDiff%(24*3600*1000);    //计算天数后剩余的毫秒数
+    var hours=Math.floor(leave1/(3600*1000));//计算出小时数
+    //计算相差分钟数
+    var leave2=leave1%(3600*1000);    //计算小时数后剩余的毫秒数
+    var minutes=Math.floor(leave2/(60*1000));//计算相差分钟数
+    //计算相差秒数
+    var leave3=leave2%(60*1000);      //计算分钟数后剩余的毫秒数
+    var seconds=Math.round(leave3/1000);
+    var tLength = hours + "小时" + minutes + "分钟" + seconds + "秒";
+    return tLength;
+}
+
+//结束后邮件动画
+function closeAnimate() {
+	$(".ulDanmaku").fadeOut();
+	$("#danmakuInnerBox").css("overflow", "hidden");
+	
+	var a = document.getElementById('danmakuInnerBox');
+	// a.scrollTop = a.scrollHeight * 0.1;
+	// a.scrollLeft = a.scrollWidth * 0.3;
+	setTimeout(function(){
+		$("#movingArea").fadeIn();
+	},400)
+	var mail = $("#mailImg");
+	var siri = $("#siriImg");
+
+	setTimeout(function(){
+		mail.css("position", "absolute");
+		// 弹跳动画
+		var mailTop = 0;
+		var mailLeft = 50;
+		var mailWidth = 100;
+		var ySpeed = 0;
+		var xSpeed = 1;
+		var smaller = 0.5;
+		
+		function bounce() {
+			// 纵坐标
+			mailTop += ySpeed;
+
+			// 横坐标
+			mailLeft += xSpeed;
+
+			// 大小
+			mailWidth -= smaller;
+
+			// if (mailTop < 70) {
+				mail.css("top", mailTop + "%");
+			// }
+			ySpeed += 0.1;
+
+			if (mailLeft < 170) {
+				mail.css("left", mailLeft + "%");
+			}
+
+			if (mailWidth > 30) {
+				mail.css("width", mailWidth + "%");
+			}else {
+				mail.css("width", "30%");
+			}
+			timer1 = requestAnimationFrame(bounce);
+			if (mailTop > 70) {
+				ySpeed = -ySpeed * 0.8;
+			}
+			
+		}
+		var timer1 = requestAnimationFrame(bounce);
+		setTimeout(function(){
+			cancelAnimationFrame(timer1);	
+			mail.hide();	
+		},5000)
+	},500);
+
 	
 }
 

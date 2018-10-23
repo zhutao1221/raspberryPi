@@ -1,3 +1,20 @@
+@media only screen and (max-width: 1115px) {
+	.buttonLine {
+		width: 100%;
+		margin-top: 10px;
+	}
+	.meetingSet button {
+		padding-left: 5%;
+	}
+}
+@media only screen and (min-width: 1115px) {
+	.buttonLine {
+		width: 50%;
+	}
+	.meetingSet button {
+		padding-left: 12%;
+	}
+}
 button {
 	outline: none;
 }
@@ -10,7 +27,6 @@ input {
 	display: -webkit-flex;
 	flex-wrap: nowrap;
 }
-
 /*蒙版*/
 .mask {
 	position: fixed;
@@ -40,6 +56,18 @@ input {
 	width: 80%;
 	height: 40%;
 }
+#msgPopSpan {
+	color: #000;
+	font-size: 2vw; 
+	letter-spacing: 10px; 
+	font-weight: bold; 
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	margin-right: 20px; 
+	display: block;
+	text-align: center;
+}
 #meetingName {
 	font-size: 1.5vw;
 	letter-spacing: 5px;
@@ -52,6 +80,7 @@ input {
 	width: auto;
 	line-height: 50px;
 	text-align: center;
+	font-size: 16px;
 }
 
 /*liveBox*/
@@ -75,7 +104,7 @@ input {
 	font-size: 1.5vw;
 	font-weight: bold;
 	margin: 20px;
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 	flex-direction: row;
     flex-wrap: wrap;
 }
@@ -83,9 +112,13 @@ input {
 	border: none;
 	background-color: transparent;
 	font-size: 1vw;
-	padding-left: 12%;
 	background-repeat: no-repeat;
 	background-size: auto 100%;
+}
+.buttonLine {
+		display:block; 
+		margin-left:20px; 
+		text-align:center; 
 }
 #checkInButton {
 	background-image: url(../img/checkInBtn.svg);
@@ -95,12 +128,38 @@ input {
 	background-image: url(../img/startBtn.svg);
 	color: #e0620d;
 }
+.timeLine {
+	width: 100%;
+	display: block;
+	text-align: center;
+	font-weight: 400;
+	font-size: 1.2vw;
+	margin-top: 10px;
+}
+.timeLine img {
+	width: 16px;
+	margin-right: 5px;
+    margin-bottom: 5px;
+}
 .demo {
 	width: 100%;
 	height: auto;
 }
 
 /*弹幕记录框*/
+.danmakuImg {
+	/*top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    position: absolute;*/
+    display: block;
+}
+#mailImg {
+	width: 100%;
+	position: relative;
+	transform: translate(-50%,-100%);
+	left: 50%;
+}
 #video {
 	width: 100%;
 }
@@ -124,6 +183,22 @@ input {
 	height: 100%;
 	overflow-y: auto;
 }
+.danmakuTime {
+	text-align: center;
+	margin-bottom: 15px;
+    margin-top: 15px;
+    color: #ccc;
+}
+#timeSpan {
+	font-size: 1.6vw;
+/*	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 15px;
+    background-color: #ccc;
+    color: #fff;*/
+}
 .ulDanmaku {
 	list-style: none;
 	padding-left: 10px;
@@ -132,7 +207,10 @@ input {
 	word-break:normal;
 	white-space:pre-wrap;
 	word-wrap:break-word;
-	font-size: 1.2vw;
+	font-size: 2vw;
 	margin-right: 5px;
 }
-
+.ulDanmaku img {
+	width: 32px;
+	height: 32px;
+}

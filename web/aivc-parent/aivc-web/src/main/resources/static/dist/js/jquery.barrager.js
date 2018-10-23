@@ -10,7 +10,7 @@
 			close:true,
 			bottom: 0,
 			max: 10,
-			speed: 6,
+			speed: 8,
 			color: '#fff',
 			old_ie_color : '#000000'
 		}, barrage || {});
@@ -19,7 +19,7 @@
 		var id = '#' + barrager_id;
 		var div_barrager = $("<div class='barrage' id='" + barrager_id + "'></div>").appendTo($(this));
 		
-		var window_height = $(window).height() - 400;
+		var window_height = $(window).height() - 450;
 		var window_width = $(window).width() * 0.7;
 
 		var bottom = (barrage.bottom == 0) ? Math.floor(Math.random() * window_height + 200) : barrage.bottom;
@@ -66,7 +66,7 @@
 		//显示记录
 		setTimeout(function() {
 				chatMessage(barrage.info);
-		},6000);
+		},barrage.speed * 1000);
 		// 记录框
 		function chatMessage(message) {
 			
@@ -74,7 +74,7 @@
 
 			var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;" + message + "</p></li>";
 			// var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;</p></li>";
-			console.log("111");
+			// console.log("111");
 		    $(".ulDanmaku").append(liDom);
 		    
 		    var i = 0;
