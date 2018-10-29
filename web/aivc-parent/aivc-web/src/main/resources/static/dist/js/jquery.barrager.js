@@ -64,9 +64,10 @@
 		var distance = $(window).width() * 0.7 + -j;
 
 		//显示记录
-		setTimeout(function() {
-				chatMessage(barrage.info);
-		},barrage.speed * 1000);
+		chatMessage(barrage.info);
+		// setTimeout(function() {
+		// 		chatMessage(barrage.info);
+		// },barrage.speed * 1000);
 		// 记录框
 		function chatMessage(message) {
 			
