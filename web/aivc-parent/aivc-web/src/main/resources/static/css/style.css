@@ -21,6 +21,14 @@ button {
 input {
 	outline: none;
 }
+.rclass {
+	height: 32px;
+    display: inline-block;
+	width: 55%;
+	background-color: #b2ffb2;
+	border-radius: 5px;
+	line-height: 32px;
+}
 /*弹性布局*/
 .box {
 	display: flex;

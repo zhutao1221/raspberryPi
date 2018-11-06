@@ -83,6 +83,7 @@ public class VoiceAnalysis {
 		//写音频流时，文件是应用层已有的，不必再保存
 //		recognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH,
 //				"./iat_test.pcm");
+		recognizer.setParameter( SpeechConstant.VAD_EOS, "10000" );
 		recognizer.setParameter( SpeechConstant.SAMPLE_RATE, "16000" );
 		recognizer.setParameter( SpeechConstant.RESULT_TYPE, "plain" );
 		recognizer.startListening(recListener);

@@ -73,8 +73,8 @@
 			
 			var randomAvatar = parseInt(Math.random() * 3) + 1;
 
-			var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;" + message + "</p></li>";
-			// var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;</p></li>";
+			var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:&nbsp;&nbsp;<span class=\"rclass\"><img style=\"width:25px;height:25px\" src=\"img/r.png\"></span><span style=\"display:block\">" + message + "</span></p></li>";
+			// var liDom = "<li class=\"danmakuUser\"><p id=\"liDomTxt\"><span><img src=\"img/avatar" + randomAvatar + ".svg\"></span>&nbsp;&nbsp;:"<img src\"img/p.png\">""\b&nbsp;&nbsp;</p></li>";
 			// console.log("111");
 		    $(".ulDanmaku").append(liDom);
 		    

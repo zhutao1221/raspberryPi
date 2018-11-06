@@ -72,7 +72,7 @@
 	<!-- 蒙版 -->
 	<div class="mask"></div>
 	<!-- 弹出框:创建会议 -->
-	<div class="popBox createPop" >
+	<div class="popBox createPop">
 		<div style="position: absolute; left: 50%; top:50%; transform: translate(-50%,-50%); width: 80%; text-align:center; ">
 			<div style="color: #000; margin-bottom: 9%; font-size: 2.5vw; letter-spacing: 5px; font-weight: bold;">智能会议室</div>
 			<span style="color: #000;font-size: 2vw; letter-spacing: 10px; font-weight: bold;" id="meeting">会议名称：</span>
@@ -191,6 +191,7 @@ var updateTime = new Date();
 var meetingId = "";
 
 var damakuSum = 0;
+
 //循环从数据库中取数
 setInterval(function(){
 	//alert(id + " " + updateTime + " " + start);
@@ -198,8 +199,8 @@ setInterval(function(){
 		return;
 	}
 	
-	// var example_item={'img':'','info':'Hello world!'};
-	// $('#video').barrager(example_item);
+	 //var example_item={'img':'','info':'Hello world!'};
+	 //$('#video').barrager(example_item);
 	
 	$.ajax({
 		type:"POST",
@@ -231,7 +232,7 @@ setInterval(function(){
 		}
 		
 	});
-},2000);
+},1000);
 
 function updateMeetingMng(status){
 	$.ajax({
