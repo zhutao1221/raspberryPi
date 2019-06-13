@@ -5,3 +5,5 @@ picTest/**
 **/target/**
 **/logs/**
 **/aivc-web/msc/**
+**/temp/**
+**/news/**
